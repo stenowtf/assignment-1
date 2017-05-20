@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
 import fecha from 'fecha';
+import Socket from './socket.js';
 
 import './App.css';
 
@@ -28,27 +29,42 @@ const DownloadsGoogleMap = withGoogleMap(props => (
 ));
 
 class App extends Component {
-  state = {
-    markers: []
-  };
-
-  handleMapLoad(map) {
-    this._mapComponent = map;
-    if (map) {
-      console.log(map.getZoom());
+  constructor(props) {
+    super(props);
+    this.state = {
+      markers: [],
+      connected: false,
     }
   }
-
+  componentDidMount() {
+    let ws = new WebSocket('ws://localhost:4000');
+    let socket = this.socket = new Socket(ws);
+    socket.on('connect', this.onConnect.bind(this));
+    socket.on('disconnect', this.onDisconnect.bind(this));
+    socket.on('marker add', this.onAddMarker.bind(this));
+    socket.on('marker remove', this.onRemoveMarker.bind(this));
+  }
+  onConnect() {
+    this.setState({connected: true});
+    this.socket.emit('map subscribe');
+  }
+  onDisconnect() {
+    this.setState({connected: false});
+  }
+  handleMapLoad(map) {
+    // this._mapComponent = map;
+    // if (map) {
+    //   console.log(map.getZoom());
+    // }
+  }
   handleMapClick(event) {
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
-
     const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng
 
     fetch(url, { method: 'GET' })
     .then(response => response.json())
     .then(json => {
-      console.log(json);
       let newMarkerRegion;
       let newMarkerCountry;
 
@@ -65,40 +81,41 @@ class App extends Component {
 
       return [newMarkerRegion, newMarkerCountry];
     })
-    .then(lol => {
-      console.log(lol);
+    .then(geoInfo => {
+      if (geoInfo[0] !== undefined) {
+        const marker = {
+          position: event.latLng,
+          latitude: lat,
+          longitude: lng,
+          defaultAnimation: 2,
+          key: Date.now(), // http://fb.me/react-warning-keys
+          id: Date.now(),
+          country: geoInfo[0],
+          region: geoInfo[1],
+          time: fecha.format(Date.now(), 'HH:mm:ss MM/DD/YYYY'),
+        };
 
-      if (lol[0] !== undefined) {
-        const nextMarkers = [
-          ...this.state.markers,
-          {
-            position: event.latLng,
-            defaultAnimation: 2,
-            key: Date.now(), // Add a key property for: http://fb.me/react-warning-keys.
-            country: lol[0],
-            region: lol[1],
-            time: Date.now(),
-          },
-        ];
-
-        this.setState({
-          markers: nextMarkers,
-        });
+        this.socket.emit('marker add', marker);
       } else {
-        console.log('Cannot drop a marker on 🌊!');
+        console.log('Cannot drop a marker! Probably was on 🌊?');
       }
-    }
-
-    )
+    })
     .catch(err => {
       console.error('Reverse geocoding failed.')
     });
+  }
+  onAddMarker(marker) {
+    console.log(marker);
 
-    console.log(this.state);
-    console.log('====================================');
+    marker.position = { lat: marker.latitude, lng: marker.longitude }
+
+    let {markers} = this.state;
+    markers.push(marker);
+    this.setState({markers});
+  }
+  onRemoveMarker() {
 
   }
-
   handleMarkerRightClick(targetMarker) {
     /*
      * All you modify is data, and the view is driven by data.

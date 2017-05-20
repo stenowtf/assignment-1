@@ -16,6 +16,6 @@ indent_size = 4
 [*.{md,markdown}]
 trim_trailing_whitespace = false
 
-[*.{go}]
+[*.go]
 indent_style = tab
 indent_size = 8
