@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
+import fecha from 'fecha';
 
 import './App.css';
 
@@ -28,7 +29,7 @@ const DownloadsGoogleMap = withGoogleMap(props => (
 
 class App extends Component {
   state = {
-    markers: [],
+    markers: []
   };
 
   handleMapLoad(map) {
@@ -39,37 +40,62 @@ class App extends Component {
   }
 
   handleMapClick(event) {
-    let lat = event.latLng.lat();
-    let lng = event.latLng.lng();
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
 
-    let url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng
+    const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng
 
-    fetch(url, {
-      method: 'GET'
-    })
+    fetch(url, { method: 'GET' })
     .then(response => response.json())
     .then(json => {
       console.log(json);
+      let newMarkerRegion;
+      let newMarkerCountry;
+
+      json.results.forEach(
+        (element, index) => {
+          if (element.types[0] === 'administrative_area_level_1') {
+            newMarkerRegion = element.formatted_address;
+          }
+          if (element.types[0] === 'country') {
+            newMarkerCountry = element.formatted_address;
+          }
+        }
+      );
+
+      return [newMarkerRegion, newMarkerCountry];
     })
+    .then(lol => {
+      console.log(lol);
+
+      if (lol[0] !== undefined) {
+        const nextMarkers = [
+          ...this.state.markers,
+          {
+            position: event.latLng,
+            defaultAnimation: 2,
+            key: Date.now(), // Add a key property for: http://fb.me/react-warning-keys.
+            country: lol[0],
+            region: lol[1],
+            time: Date.now(),
+          },
+        ];
+
+        this.setState({
+          markers: nextMarkers,
+        });
+      } else {
+        console.log('Cannot drop a marker on 🌊!');
+      }
+    }
+
+    )
     .catch(err => {
       console.error('Reverse geocoding failed.')
     });
 
-    // paese
-    //
-
-    const nextMarkers = [
-      ...this.state.markers,
-      {
-        position: event.latLng,
-        defaultAnimation: 2,
-        key: Date.now(), // Add a key property for: http://fb.me/react-warning-keys
-      },
-    ];
-
-    this.setState({
-      markers: nextMarkers,
-    });
+    console.log(this.state);
+    console.log('====================================');
 
   }
 
