@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
-import fecha from 'fecha';
+import moment from 'moment';
 import Socket from './socket.js';
 import { VictoryPie } from 'victory-pie';
 import { VictoryTooltip } from 'victory-core';
+import { VictoryChart, VictoryBar } from 'victory-chart';
 import './App.css';
 
 const DownloadsGoogleMap = withGoogleMap(props => (
@@ -87,41 +88,49 @@ class ChartDownloads extends Component {
 
 class ChartTimeOfDay extends Component {
   render() {
+    const {markers} = this.props;
+
+    let timesOfDay = [
+      { time: 'Morning', total: 0 },
+      { time: 'Afternoon', total: 0 },
+      { time: 'Evening', total: 0 },
+    ];
+
+    markers.forEach(marker => {
+      const endMorning = 12;
+      const endAfternoon = 18;
+
+      let hour = moment(marker.time, 'HH:mm:ss MM/DD/YYYY').hour();
+
+      let timeOfDay;
+
+      if (hour <= endMorning) {
+        timeOfDay = 'Morning';
+      }
+      else if (hour <= endAfternoon) {
+        timeOfDay = 'Afternoon';
+      } else {
+        timeOfDay = 'Evening';
+      }
+
+      timesOfDay.forEach(t => {
+        if (t.time === timeOfDay) {
+          t.total = t.total + 1;
+        }
+      });
+    });
+
     return (
-      <p>ChartTimeOfDay component</p>
+      <VictoryChart>
+        <VictoryBar
+          data={timesOfDay}
+          x='time'
+          y='total'
+        />
+      </VictoryChart>
     );
   }
 }
-
-/*class MarkerDataList extends Component {
-  render() {
-    return (
-      <ul>{
-        this.props.markers.map(marker => {
-          return (
-            <MarkerData
-              marker={marker}
-              key={marker.id}
-            />
-          );
-        })
-      }</ul>
-    );
-  }
-};
-
-class MarkerData extends Component {
-  render() {
-    const {marker} = this.props;
-    return (
-      <li>
-          <span className='region'>{marker.region}</span>
-          <span className='country'>{marker.country}</span>
-          <span className='time'>{marker.time}</span>
-      </li>
-    );
-  }
-};*/
 
 class App extends Component {
   constructor(props) {
@@ -187,7 +196,7 @@ class App extends Component {
           id: Date.now(),
           region: geoInfo[0],
           country: geoInfo[1],
-          time: fecha.format(Date.now(), 'HH:mm:ss MM/DD/YYYY'),
+          time: moment().format('HH:mm:ss MM/DD/YYYY'),
         };
 
         this.socket.emit('marker add', marker);

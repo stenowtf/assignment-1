@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "fecha": "^2.3.1",
     "geonames.js": "^1.0.3",
-    "normalize.css": "^7.0.0",
+    "moment": "^2.18.1",
     "react": "^15.5.4",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4",
     "react-google-maps": "next",
+    "victory-chart": "^19.1.1",
     "victory-pie": "^11.1.0"
   },
   "devDependencies": {
