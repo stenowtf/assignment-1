@@ -3,6 +3,7 @@ import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
 import fecha from 'fecha';
 import Socket from './socket.js';
+import { FormGroup, FormControl, InputGroup, Glyphicon } from 'react-bootstrap';
 
 import './App.css';
 
@@ -27,6 +28,36 @@ const DownloadsGoogleMap = withGoogleMap(props => (
     </MarkerClusterer>
   </GoogleMap>
 ));
+
+class MarkerDataList extends Component {
+  render() {
+    return (
+      <ul>{
+        this.props.markers.map(marker => {
+          return (
+            <MarkerData
+              marker={marker}
+              key={marker.id}
+            />
+          );
+        })
+      }</ul>
+    );
+  }
+};
+
+class MarkerData extends Component {
+  render() {
+    const {marker} = this.props;
+    return (
+      <li>
+          <span className='region'>{marker.region}</span>
+          <span className='country'>{marker.country}</span>
+          <span className='time'>{marker.time}</span>
+      </li>
+    );
+  }
+};
 
 class App extends Component {
   constructor(props) {
@@ -68,6 +99,8 @@ class App extends Component {
       let newMarkerRegion;
       let newMarkerCountry;
 
+      console.log(JSON.stringify(json));
+
       json.results.forEach(
         (element, index) => {
           if (element.types[0] === 'administrative_area_level_1') {
@@ -90,8 +123,8 @@ class App extends Component {
           defaultAnimation: 2,
           key: Date.now(), // http://fb.me/react-warning-keys
           id: Date.now(),
-          country: geoInfo[0],
-          region: geoInfo[1],
+          region: geoInfo[0],
+          country: geoInfo[1],
           time: fecha.format(Date.now(), 'HH:mm:ss MM/DD/YYYY'),
         };
 
@@ -113,27 +146,26 @@ class App extends Component {
     markers.push(marker);
     this.setState({markers});
   }
-  onRemoveMarker() {
-
-  }
+  onRemoveMarker() {}
   handleMarkerRightClick(targetMarker) {
     /*
      * All you modify is data, and the view is driven by data.
      * This is so called data-driven-development. (And yes, it's now in
      * web front end and even with google maps API.)
      */
-    const nextMarkers = this.state.markers.filter(marker => marker !== targetMarker);
-    this.setState({
-      markers: nextMarkers,
-    });
+    // const nextMarkers = this.state.markers.filter(marker => marker !== targetMarker);
+    // this.setState({
+    //   markers: nextMarkers,
+    // });
   }
 
   render() {
     return (
       <div className="App">
+        <div className="section-map">
           <DownloadsGoogleMap
             containerElement={
-              <div style={{ height: `500px` }} />
+              <div style={{ height: `100%` }} />
             }
             mapElement={
               <div style={{ height: `100%` }} />
@@ -143,9 +175,22 @@ class App extends Component {
             markers={this.state.markers}
             onMarkerRightClick={this.handleMarkerRightClick.bind(this)}
           />
+        </div>
+        <div className="section-form">
+          <h3>List of markers:</h3>
+          <MarkerDataList {...this.state} />
+          <FormGroup>
+            <FormControl type='text'>
+            </FormControl>
+            <InputGroup.Addon>
+              <Glyphicon glyph='search'></Glyphicon>
+            </InputGroup.Addon>
+          </FormGroup>
+        </div>
       </div>
     );
   }
 }
 
 export default App;
+export { MarkerDataList, MarkerData };
