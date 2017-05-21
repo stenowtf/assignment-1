@@ -4,15 +4,16 @@ import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
 import moment from 'moment';
 import Socket from './socket.js';
 import { VictoryPie } from 'victory-pie';
-import { VictoryTooltip } from 'victory-core';
+import { VictoryTheme, VictoryTooltip } from 'victory-core';
 import { VictoryChart, VictoryBar } from 'victory-chart';
+import Notifications, { notify } from 'react-notify-toast';
 import './App.css';
 
 const DownloadsGoogleMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
-    defaultZoom={6}
-    defaultCenter={{ lat: 44.4938100, lng: 11.3387500 }}
+    defaultZoom={1}
+    defaultCenter={{ lat: 0, lng: 0 }}
     onClick={props.onMapClick}
   >
     <MarkerClusterer
@@ -58,6 +59,8 @@ class ChartDownloads extends Component {
 
     return (
       <VictoryPie
+        theme={VictoryTheme.material}
+        style={{ parent: {border: "2px dotted #ccc"} }}
         labelComponent={
           <VictoryTooltip
             style={{
@@ -97,17 +100,12 @@ class ChartTimeOfDay extends Component {
     ];
 
     markers.forEach(marker => {
-      const endMorning = 12;
-      const endAfternoon = 18;
-
+      let timeOfDay;
       let hour = moment(marker.time, 'HH:mm:ss MM/DD/YYYY').hour();
 
-      let timeOfDay;
-
-      if (hour <= endMorning) {
+      if (hour <= 12) {
         timeOfDay = 'Morning';
-      }
-      else if (hour <= endAfternoon) {
+      } else if (hour <= 18) {
         timeOfDay = 'Afternoon';
       } else {
         timeOfDay = 'Evening';
@@ -115,14 +113,31 @@ class ChartTimeOfDay extends Component {
 
       timesOfDay.forEach(t => {
         if (t.time === timeOfDay) {
-          t.total = t.total + 1;
+          t.total += 1;
         }
       });
     });
 
     return (
-      <VictoryChart>
+      <VictoryChart
+        theme={VictoryTheme.material}
+        style={{ parent: {border: "2px dotted #ccc"} }}
+      >
         <VictoryBar
+          style={{
+            data: {
+              fill: (t) => {
+                if (t.time === 'Morning') {
+                  return 'red';
+                }
+                else if (t.time === 'Afternoon') {
+                  return 'green';
+                }
+                return 'blue';
+              },
+              width: 20,
+            },
+          }}
           data={timesOfDay}
           x='time'
           y='total'
@@ -139,6 +154,7 @@ class App extends Component {
       markers: [],
       connected: false,
     }
+    this.show = notify.createShowQueue();
   }
   componentDidMount() {
     let ws = new WebSocket('ws://localhost:4000');
@@ -164,53 +180,55 @@ class App extends Component {
   handleMapClick(event) {
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
+
+    this.generateMarker(lat, lng, true);
+  }
+  generateMarker(lat, lng, doNotify) {
     const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng
 
     fetch(url, { method: 'GET' })
     .then(response => response.json())
     .then(json => {
-      let newMarkerRegion;
       let newMarkerCountry;
 
       json.results.forEach(
         (element) => {
-          if (element.types[0] === 'administrative_area_level_1') {
-            newMarkerRegion = element.formatted_address;
-          }
           if (element.types[0] === 'country') {
             newMarkerCountry = element.formatted_address;
           }
         }
       );
 
-      return [newMarkerRegion, newMarkerCountry];
+      return [json.status, newMarkerCountry];
     })
     .then(geoInfo => {
-      if (geoInfo[0] !== undefined) {
+      if (geoInfo[0] === "OK") {
         const marker = {
-          position: event.latLng,
+          position: { lat: lat, lng: lng },
           latitude: lat,
           longitude: lng,
           defaultAnimation: 2,
-          key: Date.now(), // http://fb.me/react-warning-keys
-          id: Date.now(),
-          region: geoInfo[0],
-          country: geoInfo[1],
+          key: moment().format('x'),
+          country: geoInfo[1] !== '' ? geoInfo[1] : '(none)',
           time: moment().format('HH:mm:ss MM/DD/YYYY'),
         };
 
         this.socket.emit('marker add', marker);
+
+        if (doNotify) {
+          this.show('Marker dropped! 📍', 'success', 1500)
+        }
       } else {
-        console.log('Cannot drop a marker! Probably was on 🌊?');
+        if (doNotify) {
+          this.show('Invalid location for a marker! 🌊', 'warning', 1500)
+        }
       }
     })
     .catch(err => {
-      console.error('Reverse geocoding failed.')
+      this.show('Reverse geocoding failed. 🚫', 'error', 1500)
     });
   }
   onAddMarker(marker) {
-    // console.log(marker);
-
     marker.position = { lat: marker.latitude, lng: marker.longitude }
     marker.defaultAnimation = 2;
 
@@ -230,12 +248,29 @@ class App extends Component {
     //   markers: nextMarkers,
     // });
   }
+  onFakeDataClick(event) {
+    event.preventDefault();
+
+    const getRandomInRange = (from, to, fixed) => {
+        return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+    }
+
+    for (let i = 0; i < 200; i++) {
+      const lat = getRandomInRange(-180, 180, 7);
+      const lng = getRandomInRange(-90, 90, 7);
+
+      setTimeout(this.generateMarker(lat, lng, false), 100);
+    }
+  }
 
   render() {
     return (
       <div className="App">
+        <Notifications />
+        <h1>Embrace downloads dashboard</h1>
         <div className="section map">
           <DownloadsGoogleMap
+            markers={this.state.markers}
             containerElement={
               <div style={{ height: `100%` }} />
             }
@@ -244,14 +279,18 @@ class App extends Component {
             }
             onMapLoad={this.handleMapLoad.bind(this)}
             onMapClick={this.handleMapClick.bind(this)}
-            markers={this.state.markers}
             onMarkerRightClick={this.handleMarkerRightClick.bind(this)}
           />
+          <a onClick={this.onFakeDataClick.bind(this)}>
+            Generate some fake data!
+          </a>
         </div>
-        <div className="section chart-downloads">
+        <div className="section chart-countries">
+          <h3>Number of downloads (by country)</h3>
           <ChartDownloads {...this.state} />
         </div>
-        <div className="section chart-time-of-day">
+        <div className="section chart-times-of-day">
+          <h3>Number of downloads (by times of the day)</h3>
           <ChartTimeOfDay {...this.state} />
         </div>
       </div>
@@ -260,4 +299,3 @@ class App extends Component {
 }
 
 export default App;
-export { ChartDownloads, ChartTimeOfDay }

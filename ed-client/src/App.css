@@ -5,20 +5,28 @@
 
 .App {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
-  margin: 5px 0;
-  padding: 5px 0;
+}
+
+a {
+  cursor: pointer;
+}
+
+.section {
+  text-align: center;
 }
 
 .section.map {
-  width: 100%;
-  height: 400px;
+  width: 90%;
+  height: 500px;
 }
 
-.section.chart-downloads {
+.section.chart-countries {
   width: 50%;
 }
 
-.section.chart-time-of-day {
+.section.chart-times-of-day {
   width: 50%;
 }
+

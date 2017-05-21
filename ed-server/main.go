@@ -8,12 +8,9 @@ import (
 )
 
 type Marker struct {
-	ID        float64 `json:"id" gorethink:"id,omitempty"`
-	Key       float64 `json:"key" gorethink:"key,omitempty"`
 	Latitude  float64 `json:"latitude" gorethink:"latitude"`
 	Longitude float64 `json:"longitude" gorethink:"longitude"`
 	Country   string  `json:"country" gorethink:"country"`
-	Region    string  `json:"region" gorethink:"region"`
 	Time      string  `json:"time" gorethink:"time"`
 }
 
