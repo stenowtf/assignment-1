@@ -22,7 +22,7 @@ func addMarker(client *Client, data interface{}) {
 			client.send <- Message{"error", err.Error()}
 		}
 
-		fmt.Printf("%v", marker)
+		fmt.Printf("%+v\n", marker)
 	}()
 }
 

@@ -3,14 +3,14 @@ import { withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 import MarkerClusterer from 'react-google-maps/lib/addons/MarkerClusterer';
 import fecha from 'fecha';
 import Socket from './socket.js';
-import { FormGroup, FormControl, InputGroup, Glyphicon } from 'react-bootstrap';
-
+import { VictoryPie } from 'victory-pie';
+import { VictoryTooltip } from 'victory-core';
 import './App.css';
 
 const DownloadsGoogleMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
-    defaultZoom={10}
+    defaultZoom={6}
     defaultCenter={{ lat: 44.4938100, lng: 11.3387500 }}
     onClick={props.onMapClick}
   >
@@ -29,7 +29,71 @@ const DownloadsGoogleMap = withGoogleMap(props => (
   </GoogleMap>
 ));
 
-class MarkerDataList extends Component {
+class ChartDownloads extends Component {
+  render() {
+    const {markers} = this.props;
+    let countries = [];
+
+    markers.forEach(marker => {
+      let found = countries.find((element) => {
+        return element.country === marker.country;
+      });
+
+      if (found === undefined) {
+        countries.push({
+          country: marker.country,
+          total: 1,
+        });
+      } else {
+        let foundIndex = countries.findIndex((element) => {
+          return element.country === marker.country;
+        });
+        countries[foundIndex] = {
+          country: found.country,
+          total: found.total + 1,
+        }
+      }
+    });
+
+    return (
+      <VictoryPie
+        labelComponent={
+          <VictoryTooltip
+            style={{
+              fontSize: 10,
+            }}
+            flyoutStyle={{
+              stroke: "black",
+              fill: "white",
+            }}
+          />
+        }
+        labels={(c) => c.country + ': ' + c.total}
+        data={countries}
+        x="country"
+        y="total"
+        colorScale="qualitative"
+        sortKey={["total", "country"]}
+        padding={80}
+        padAngle={1}
+        innerRadius={10}
+        startAngle={90}
+        endAngle={450}
+      >
+      </VictoryPie>
+    );
+  }
+}
+
+class ChartTimeOfDay extends Component {
+  render() {
+    return (
+      <p>ChartTimeOfDay component</p>
+    );
+  }
+}
+
+/*class MarkerDataList extends Component {
   render() {
     return (
       <ul>{
@@ -57,7 +121,7 @@ class MarkerData extends Component {
       </li>
     );
   }
-};
+};*/
 
 class App extends Component {
   constructor(props) {
@@ -99,10 +163,8 @@ class App extends Component {
       let newMarkerRegion;
       let newMarkerCountry;
 
-      console.log(JSON.stringify(json));
-
       json.results.forEach(
-        (element, index) => {
+        (element) => {
           if (element.types[0] === 'administrative_area_level_1') {
             newMarkerRegion = element.formatted_address;
           }
@@ -138,9 +200,10 @@ class App extends Component {
     });
   }
   onAddMarker(marker) {
-    console.log(marker);
+    // console.log(marker);
 
     marker.position = { lat: marker.latitude, lng: marker.longitude }
+    marker.defaultAnimation = 2;
 
     let {markers} = this.state;
     markers.push(marker);
@@ -162,7 +225,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="section-map">
+        <div className="section map">
           <DownloadsGoogleMap
             containerElement={
               <div style={{ height: `100%` }} />
@@ -176,16 +239,11 @@ class App extends Component {
             onMarkerRightClick={this.handleMarkerRightClick.bind(this)}
           />
         </div>
-        <div className="section-form">
-          <h3>List of markers:</h3>
-          <MarkerDataList {...this.state} />
-          <FormGroup>
-            <FormControl type='text'>
-            </FormControl>
-            <InputGroup.Addon>
-              <Glyphicon glyph='search'></Glyphicon>
-            </InputGroup.Addon>
-          </FormGroup>
+        <div className="section chart-downloads">
+          <ChartDownloads {...this.state} />
+        </div>
+        <div className="section chart-time-of-day">
+          <ChartTimeOfDay {...this.state} />
         </div>
       </div>
     );
@@ -193,4 +251,4 @@ class App extends Component {
 }
 
 export default App;
-export { MarkerDataList, MarkerData };
+export { ChartDownloads, ChartTimeOfDay }
