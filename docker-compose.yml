@@ -1,0 +1,20 @@
+version: "3"
+services:
+  web:
+    build: ./ed-client
+    depends_on:
+        - server
+    ports:
+      - "3000:3000"
+  db:
+    image: rethinkdb
+    ports:
+      - "8080:8080"
+      - "28015:28015"
+      - "29015:29015"
+  server:
+    build: ./ed-server
+    depends_on:
+        - db
+    ports:
+      - "4000:4000"
