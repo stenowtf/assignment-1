@@ -1,5 +1,11 @@
-#root, .App {
+#root {
   width: 100%;
+  height: 100%;
+}
+
+.App {
+  max-width: 1200px;
+  margin: 0 auto;
   height: 100%;
 }
 
@@ -13,6 +19,7 @@ a {
   cursor: pointer;
 }
 
+h1, h3,
 .section {
   text-align: center;
 }
@@ -32,3 +39,12 @@ a {
   margin-top: 15px;
 }
 
+@media screen and (max-width: 667px) {
+  .section.chart-countries {
+    width: 100%;
+  }
+
+  .section.chart-times-of-day {
+    width: 100%;
+  }
+}

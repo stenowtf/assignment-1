@@ -77,7 +77,7 @@ class ChartDownloads extends Component {
         showPageSizeOptions={false}
         defaultSorted={[{
           id: 'total',
-          desc: false
+          desc: true
         }]}
       />
     );
