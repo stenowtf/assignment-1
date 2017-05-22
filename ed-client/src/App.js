@@ -7,8 +7,10 @@ import { VictoryPie } from 'victory-pie';
 import { VictoryTheme, VictoryTooltip } from 'victory-core';
 import { VictoryChart, VictoryBar } from 'victory-chart';
 import Notifications, { notify } from 'react-notify-toast';
+import ReactTable from 'react-table'
 
 import './App.css';
+import 'react-table/react-table.css'
 
 const DownloadsGoogleMap = withGoogleMap(props => (
   <GoogleMap
@@ -58,34 +60,26 @@ class ChartDownloads extends Component {
       }
     });
 
+    const columns = [{
+      Header: 'Country',
+      accessor: 'country',
+    }, {
+      Header: '# of downloads',
+      accessor: 'total',
+    }]
+
     return (
-      <VictoryPie
-        theme={VictoryTheme.material}
-        style={{ parent: {border: "2px dotted #ccc"} }}
-        labelComponent={
-          <VictoryTooltip
-            style={{
-              fontSize: 10,
-            }}
-            flyoutStyle={{
-              stroke: "black",
-              fill: "white",
-            }}
-          />
-        }
-        labels={(c) => c.country + ': ' + c.total}
+      <ReactTable
         data={countries}
-        x="country"
-        y="total"
-        colorScale="qualitative"
-        sortKey={["total", "country"]}
-        padding={80}
-        padAngle={1}
-        innerRadius={10}
-        startAngle={90}
-        endAngle={450}
-      >
-      </VictoryPie>
+        columns={columns}
+        defaultPageSize={15}
+        showPageJump={false}
+        showPageSizeOptions={false}
+        defaultSorted={[{
+          id: 'total',
+          desc: false
+        }]}
+      />
     );
   }
 }
@@ -122,7 +116,6 @@ class ChartTimeOfDay extends Component {
     return (
       <VictoryChart
         theme={VictoryTheme.material}
-        style={{ parent: {border: "2px dotted #ccc"} }}
       >
         <VictoryBar
           style={{
@@ -207,16 +200,16 @@ class App extends Component {
         let time;
 
         if (isRandom) {
-          const randomNumber = (to, from = 0) => {
+          const randomNumber = (to, from) => {
             return Math.floor(Math.random() * (to - from) + from);
           };
-          time = moment.unix(randomNumber(moment().format('x')));
+          time = moment.unix(randomNumber(moment().unix(), moment(new Date(2017, 4, 22)).unix()));
         } else {
           time = moment();
         }
 
         const randomKey = Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
-        const country = typeof geoInfo[1] === 'undefined' || !geoInfo[1] ? '(none)' : geoInfo[1];
+        const country = typeof geoInfo[1] === undefined || geoInfo[1] === '' ? '(none)' : geoInfo[1];
 
         const marker = {
           position: { lat: lat, lng: lng },

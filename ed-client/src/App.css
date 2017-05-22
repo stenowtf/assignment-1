@@ -24,9 +24,11 @@ a {
 
 .section.chart-countries {
   width: 50%;
+  margin-top: 15px;
 }
 
 .section.chart-times-of-day {
   width: 50%;
+  margin-top: 15px;
 }
 

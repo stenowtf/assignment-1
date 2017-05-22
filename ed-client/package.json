@@ -10,6 +10,7 @@
     "react-dom": "^15.5.4",
     "react-google-maps": "next",
     "react-notify-toast": "^0.1.5",
+    "react-table": "^6.0.5",
     "victory-chart": "^19.1.1",
     "victory-pie": "^11.1.0"
   },
