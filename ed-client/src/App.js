@@ -7,13 +7,14 @@ import { VictoryPie } from 'victory-pie';
 import { VictoryTheme, VictoryTooltip } from 'victory-core';
 import { VictoryChart, VictoryBar } from 'victory-chart';
 import Notifications, { notify } from 'react-notify-toast';
+
 import './App.css';
 
 const DownloadsGoogleMap = withGoogleMap(props => (
   <GoogleMap
     ref={props.onMapLoad}
-    defaultZoom={1}
-    defaultCenter={{ lat: 0, lng: 0 }}
+    defaultZoom={2}
+    defaultCenter={{ lat: 44.4938100, lng: 11.3387500 }}
     onClick={props.onMapClick}
   >
     <MarkerClusterer
@@ -181,9 +182,9 @@ class App extends Component {
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
 
-    this.generateMarker(lat, lng, true);
+    this.generateMarker(lat, lng, false);
   }
-  generateMarker(lat, lng, doNotify) {
+  generateMarker(lat, lng, isRandom) {
     const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng
 
     fetch(url, { method: 'GET' })
@@ -203,23 +204,37 @@ class App extends Component {
     })
     .then(geoInfo => {
       if (geoInfo[0] === "OK") {
+        let time;
+
+        if (isRandom) {
+          const randomNumber = (to, from = 0) => {
+            return Math.floor(Math.random() * (to - from) + from);
+          };
+          time = moment.unix(randomNumber(moment().format('x')));
+        } else {
+          time = moment();
+        }
+
+        const randomKey = Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
+        const country = typeof geoInfo[1] === 'undefined' || !geoInfo[1] ? '(none)' : geoInfo[1];
+
         const marker = {
           position: { lat: lat, lng: lng },
           latitude: lat,
           longitude: lng,
           defaultAnimation: 2,
-          key: moment().format('x'),
-          country: geoInfo[1] !== '' ? geoInfo[1] : '(none)',
-          time: moment().format('HH:mm:ss MM/DD/YYYY'),
+          key: randomKey,
+          country: country,
+          time: time.format('HH:mm:ss MM/DD/YYYY'),
         };
 
         this.socket.emit('marker add', marker);
 
-        if (doNotify) {
+        if (!isRandom) {
           this.show('Marker dropped! 📍', 'success', 1500)
         }
       } else {
-        if (doNotify) {
+        if (!isRandom) {
           this.show('Invalid location for a marker! 🌊', 'warning', 1500)
         }
       }
@@ -255,12 +270,14 @@ class App extends Component {
         return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
     }
 
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 100; i++) {
       const lat = getRandomInRange(-180, 180, 7);
       const lng = getRandomInRange(-90, 90, 7);
 
-      setTimeout(this.generateMarker(lat, lng, false), 100);
+      setTimeout(this.generateMarker(lat, lng, true), 200);
     }
+
+    this.show('Randomizing... 📍', 'success', 2500)
   }
 
   render() {
@@ -282,8 +299,8 @@ class App extends Component {
             onMarkerRightClick={this.handleMarkerRightClick.bind(this)}
           />
           <a onClick={this.onFakeDataClick.bind(this)}>
-            Generate some fake data!
-          </a>
+            Click me! Generate some random data!
+          </a> 🎲
         </div>
         <div className="section chart-countries">
           <h3>Number of downloads (by country)</h3>

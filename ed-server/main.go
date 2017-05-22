@@ -12,6 +12,7 @@ type Marker struct {
 	Longitude float64 `json:"longitude" gorethink:"longitude"`
 	Country   string  `json:"country" gorethink:"country"`
 	Time      string  `json:"time" gorethink:"time"`
+	Key       string  `json:"key" gorethink:"key"`
 }
 
 func main() {
