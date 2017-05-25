@@ -12,9 +12,13 @@ services:
       - "8080:8080"
       - "28015:28015"
       - "29015:29015"
+  data:
+    build: ./data
+    depends_on:
+        - db
   server:
     build: ./ed-server
     depends_on:
-        - db
+        - data
     ports:
       - "4000:4000"
