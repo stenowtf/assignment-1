@@ -65,6 +65,6 @@ class ChartByTime extends Component {
 
 ChartByTime.propTypes = {
   downloads: PropTypes.array.isRequired,
-}
+};
 
 export default ChartByTime;

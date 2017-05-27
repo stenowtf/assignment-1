@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 class ChartByAppVersion extends Component {
   render() {
-    const {markers} = this.props;
+    const {downloads} = this.props;
 
     return (
       <div className='chart'>
@@ -15,6 +15,6 @@ class ChartByAppVersion extends Component {
 
 ChartByAppVersion.propTypes = {
   downloads: PropTypes.array.isRequired,
-}
+};
 
 export default ChartByAppVersion;

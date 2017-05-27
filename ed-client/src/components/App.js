@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import Socket from './socket.js';
+import Socket from './socket';
 import Notifications, { notify } from 'react-notify-toast';
 
-import MapsContainer from './components/maps/MapsContainer';
-import ChartsContainer from './components/charts/ChartsContainer';
+import MapsContainer from './maps/MapsContainer';
+import ChartsContainer from './charts/ChartsContainer';
 
 import './App.css';
 
@@ -13,7 +13,7 @@ class App extends Component {
     this.state = {
       downloads: [],
       connected: false,
-    }
+    };
     this.show = notify.createShowQueue();
   }
   componentDidMount() {

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ReactTable from 'react-table'
+import ReactTable from 'react-table';
 
-import 'react-table/react-table.css'
+import 'react-table/react-table.css';
 
 class ChartByCountry extends Component {
   render() {
@@ -26,7 +26,7 @@ class ChartByCountry extends Component {
         countries[foundIndex] = {
           country: found.country,
           total: found.total + 1,
-        }
+        };
       }
     });
 
@@ -36,7 +36,7 @@ class ChartByCountry extends Component {
     }, {
       Header: '# of downloads',
       accessor: 'total',
-    }]
+    }];
 
     return (
       <div className='chart'>
@@ -58,6 +58,6 @@ class ChartByCountry extends Component {
 
 ChartByCountry.propTypes = {
   downloads: PropTypes.array.isRequired,
-}
+};
 
 export default ChartByCountry;

@@ -1,6 +1,6 @@
 {
-  "short_name": "Embrace Download",
-  "name": "Embrace download test page",
+  "short_name": "edd",
+  "name": "Embrace downloads dashboard",
   "icons": [
     {
       "src": "favicon.ico",

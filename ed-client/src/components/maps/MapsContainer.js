@@ -4,8 +4,7 @@ import moment from 'moment';
 import { notify } from 'react-notify-toast';
 
 import MapDownloads from './MapDownloads';
-import { AppOS } from '../../app-data'
-import { AppVersions } from '../../app-data'
+import { AppOS, AppVersions } from '../utils';
 
 class MapsContainer extends Component {
   constructor() {
@@ -20,7 +19,7 @@ class MapsContainer extends Component {
     this.generateMarker(latitude, longitude, false);
   }
   generateMarker(latitude, longitude, isRandom) {
-    const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude
+    const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + latitude + ',' + longitude;
 
     fetch(url, { method: 'GET' })
     .then(response => response.json())
@@ -29,8 +28,10 @@ class MapsContainer extends Component {
 
       json.results.forEach(
         (element) => {
-          if (element.types[0] === 'country') {
+          if (element.types[0] === 'country' && typeof element.types[0] !== undefined && element.types[0] !== '') {
             country = element.formatted_address;
+          } else {
+            country = '(none)';
           }
         }
       );
@@ -38,7 +39,7 @@ class MapsContainer extends Component {
       return [json.status, country];
     })
     .then(geoInfo => {
-      if (geoInfo[0] === "OK") {
+      if (geoInfo[0] === 'OK') {
         let time;
 
         if (isRandom) {
@@ -50,19 +51,19 @@ class MapsContainer extends Component {
           time = moment();
         }
 
-        const randomKey = Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
-        const country = typeof geoInfo[1] === undefined || geoInfo[1] === '' ? '(none)' : geoInfo[1];
+        const os = Math.floor(Math.random() * 2);
+        const version = Math.floor(Math.random() * (AppVersions[os].length + 1));
 
         const marker = {
           position: { lat: latitude, lng: longitude },
           latitude: latitude,
           longitude: longitude,
           defaultAnimation: 2,
-          key: randomKey,
-          country: country,
+          key: Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36),
+          country: geoInfo[1],
           time: time.format('HH:mm:ss MM/DD/YYYY'),
-          os: AppOS[0],
-          version: AppVersions[0][0],
+          os: AppOS[os],
+          version: AppVersions[os][version],
         };
 
         this.props.addDownload(marker);
@@ -77,15 +78,15 @@ class MapsContainer extends Component {
       }
     })
     .catch(err => {
-      this.show('Reverse geocoding failed. 🚫', 'warning', 1500)
+      this.show('Server error. 🚫', 'warning', 1500);
     });
   }
   generateRandomMarkers(event) {
     event.preventDefault();
 
     const getRandomInRange = (from, to, fixed) => {
-        return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
-    }
+      return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+    };
 
     for (let i = 0; i < 100; i++) {
       const latitude = getRandomInRange(-180, 180, 7);
@@ -94,7 +95,7 @@ class MapsContainer extends Component {
       setTimeout(this.generateMarker(latitude, longitude, true), 200);
     }
 
-    this.show('People are downloading the app! 🌟✨💫', 'success', 2500)
+    this.show('People are downloading the app! 🌟✨💫', 'success', 2500);
   }
   render() {
     return (
@@ -102,10 +103,10 @@ class MapsContainer extends Component {
         <MapDownloads
           downloads={this.props.downloads}
           containerElement={
-            <div style={{ height: `100%` }} />
+            <div style={{ height: '100%' }} />
           }
           mapElement={
-            <div style={{ height: `100%` }} />
+            <div style={{ height: '100%' }} />
           }
           onMapLoad={this.mapLoad.bind(this)}
           onMapClick={this.dropMarker.bind(this)}
@@ -121,6 +122,6 @@ class MapsContainer extends Component {
 MapsContainer.propTypes = {
   downloads: PropTypes.array.isRequired,
   addDownload: PropTypes.func.isRequired,
-}
+};
 
 export default MapsContainer;
