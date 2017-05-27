@@ -12,6 +12,7 @@
     "react-google-maps": "next",
     "react-notify-toast": "^0.1.5",
     "react-responsive-tabs": "^1.0.1",
+    "react-svg-piechart": "^1.2.3",
     "react-table": "^6.0.5",
     "victory-chart": "^19.1.1",
     "victory-pie": "^11.1.0"
@@ -19,6 +20,7 @@
   "devDependencies": {
     "eslint": "^3.19.0",
     "eslint-config-standard": "10.2.1",
+    "eslint-plugin-jest": "^20.0.3",
     "eslint-plugin-node": "4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "7.0.1",

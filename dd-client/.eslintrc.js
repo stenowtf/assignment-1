@@ -1,7 +1,8 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true
+    es6: true,
+    "jest/globals": true,
   },
   extends: 'eslint:recommended',
   parserOptions: {
@@ -11,7 +12,7 @@ module.exports = {
     },
     sourceType: 'module'
   },
-  plugins: ['react'],
+  plugins: ['react', 'jest'],
   rules: {
     indent: [
       'error', 2
@@ -34,5 +35,9 @@ module.exports = {
       'exports': 'never',
       'functions': 'ignore',
     }],
+    'jest/no-disabled-tests': 'warn',
+    'jest/no-focused-tests': 'error',
+    'jest/no-identical-title': 'error',
+    'jest/valid-expect': 'error',
   }
 };
