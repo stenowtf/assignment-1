@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import renderer from 'react-test-renderer'
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import renderer from 'react-test-renderer'
 
-import App, { MarkerDataList } from './App';
+// import App, { MarkerDataList } from './App';
 
 // it('App renders without crashing', () => {
 //   const div = document.createElement('div');

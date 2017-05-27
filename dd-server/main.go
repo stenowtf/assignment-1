@@ -7,18 +7,20 @@ import (
 	r "gopkg.in/gorethink/gorethink.v3"
 )
 
-type Marker struct {
+type Download struct {
 	Latitude  float64 `json:"latitude" gorethink:"latitude"`
 	Longitude float64 `json:"longitude" gorethink:"longitude"`
 	Country   string  `json:"country" gorethink:"country"`
 	Time      string  `json:"time" gorethink:"time"`
 	Key       string  `json:"key" gorethink:"key"`
+	OS        string  `json:"os" gorethink:"os"`
+	Version   string  `json:"version" gorethink:"version"`
 }
 
 func main() {
 	session, err := r.Connect(r.ConnectOpts{
 		Address:  "db:28015",
-		Database: "edserver",
+		Database: "dd",
 	})
 
 	if err != nil {
@@ -29,8 +31,7 @@ func main() {
 
 	router.Handle("map subscribe", subscribeMap)
 	router.Handle("map unsubscribe", unsubscribeMap)
-	router.Handle("marker add", addMarker)
-	router.Handle("marker remove", removeMarker)
+	router.Handle("download add", addDownload)
 	http.Handle("/", router)
 	http.ListenAndServe(":4000", nil)
 }

@@ -14,4 +14,4 @@ pip install rethinkdb
 
 COPY ./data.json /usr/data.json
 
-CMD ["rethinkdb", "import", "-c", "db:28015", "-f", "/usr/data.json", "--table", "edserver.marker", "--format", "json" ]
+CMD ["rethinkdb", "import", "-c", "db:28015", "-f", "/usr/data.json", "--table", "dd.downloads", "--format", "json" ]

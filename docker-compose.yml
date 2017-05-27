@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    build: ./ed-client
+    build: ./dd-client
     depends_on:
         - server
     ports:
@@ -17,7 +17,7 @@ services:
     depends_on:
         - db
   server:
-    build: ./ed-server
+    build: ./dd-server
     depends_on:
         - data
     ports:
