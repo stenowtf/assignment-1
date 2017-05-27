@@ -25,4 +25,11 @@ const MapDownloads = withGoogleMap(props => (
   </GoogleMap>
 ));
 
+MapDownloads.propTypes = {
+  markers: PropTypes.array.isRequired,
+  onMapLoad: PropTypes.func.isRequired,
+  onMapClick: PropTypes.func.isRequired,
+  onMarkerRightClick: PropTypes.func.isRequired,
+}
+
 export default MapDownloads;

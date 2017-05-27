@@ -34,31 +34,37 @@ class ChartTimesOfDay extends Component {
     });
 
     return (
-      <VictoryChart
-        theme={VictoryTheme.material}
-      >
-        <VictoryBar
-          style={{
-            data: {
-              fill: (t) => {
-                if (t.time === 'Morning') {
-                  return 'red';
-                }
-                else if (t.time === 'Afternoon') {
-                  return 'green';
-                }
-                return 'blue';
+      <div className='section chart-times-of-day'>
+        <VictoryChart
+          theme={VictoryTheme.material}
+        >
+          <VictoryBar
+            style={{
+              data: {
+                fill: (t) => {
+                  if (t.time === 'Morning') {
+                    return 'red';
+                  }
+                  else if (t.time === 'Afternoon') {
+                    return 'green';
+                  }
+                  return 'blue';
+                },
+                width: 20,
               },
-              width: 20,
-            },
-          }}
-          data={timesOfDay}
-          x='time'
-          y='total'
-        />
-      </VictoryChart>
+            }}
+            data={timesOfDay}
+            x='time'
+            y='total'
+          />
+        </VictoryChart>
+      </div>
     );
   }
+}
+
+ChartTimesOfDay.propTypes = {
+  markers: PropTypes.array.isRequired,
 }
 
 export default ChartTimesOfDay;

@@ -15,10 +15,6 @@
   flex-wrap: wrap;
 }
 
-a {
-  cursor: pointer;
-}
-
 h1, h3,
 .section {
   text-align: center;
@@ -27,10 +23,26 @@ h1, h3,
 .section.map {
   width: 90%;
   height: 500px;
+  position: relative;
 }
 
-.charts-container {
-  width: 100%;
+.generatorLink {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2px 6px 2px 4px;
+  margin: 2px;
+  background: #fff;
+}
+
+.tabs-container {
+  width: 90%;
+  margin: 15px 0;
+  min-height: 500px;
+}
+
+.chartGroup {
   display: flex;
 }
 
@@ -45,7 +57,7 @@ h1, h3,
 }
 
 @media screen and (max-width: 667px) {
-  .charts-container {
+  .chartGroup {
     flex-direction: column;
   }
 

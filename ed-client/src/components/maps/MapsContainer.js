@@ -10,8 +10,8 @@ class MapsContainer extends Component {
     super();
     this.show = notify.createShowQueue();
   }
-  handleMapLoad(map) {}
-  handleMapClick(event) {
+  mapLoad(map) {}
+  dropMarker(event) {
     const latitude = event.latLng.lat();
     const longitude = event.latLng.lng();
 
@@ -106,16 +106,21 @@ class MapsContainer extends Component {
           mapElement={
             <div style={{ height: `100%` }} />
           }
-          onMapLoad={this.handleMapLoad.bind(this)}
-          onMapClick={this.handleMapClick.bind(this)}
+          onMapLoad={this.mapLoad.bind(this)}
+          onMapClick={this.dropMarker.bind(this)}
           onMarkerRightClick={this.handleMarkerRightClick.bind(this)}
         />
-        <a onClick={this.generateRandomMarkers.bind(this)}>
-          Click me! Generate some random data!
-        </a> 🎲
+        <a className='generatorLink' onClick={this.generateRandomMarkers.bind(this)}>
+          Generate some random data! <span role='img' aria-label='dice'>🎲</span>
+        </a>
       </div>
     );
   }
+}
+
+MapsContainer.propTypes = {
+  markers: PropTypes.array.isRequired,
+  addMarker: PropTypes.func.isRequired,
 }
 
 export default MapsContainer;

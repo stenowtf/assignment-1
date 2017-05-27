@@ -39,19 +39,25 @@ class ChartDownloads extends Component {
     }]
 
     return (
-      <ReactTable
-        data={countries}
-        columns={columns}
-        defaultPageSize={15}
-        showPageJump={false}
-        showPageSizeOptions={false}
-        defaultSorted={[{
-          id: 'total',
-          desc: true
-        }]}
-      />
+      <div className='section chart-countries'>
+        <ReactTable
+          data={countries}
+          columns={columns}
+          defaultPageSize={15}
+          showPageJump={false}
+          showPageSizeOptions={false}
+          defaultSorted={[{
+            id: 'total',
+            desc: true,
+          }]}
+        />
+      </div>
     );
   }
+}
+
+ChartDownloads.propTypes = {
+  markers: PropTypes.array.isRequired,
 }
 
 export default ChartDownloads;

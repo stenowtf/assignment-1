@@ -20,7 +20,7 @@ Prerequisites: Node, Yarn, Go.
 1. Navigate to: [`http://localhost:8080/#dataexplorer`](http://localhost:8080/#dataexplorer) and run this two commands:
     - `r.dbCreate('edserver');`
     - `r.db('edserver').tableCreate('marker');`
-1. Finally open [`http://localhost:3000`](http://localhost:3000)
+1. Finally open [`http://localhost:3000`](http://localhost:3000) and enjoy!
 
 ## How to install using Docker
 
@@ -29,10 +29,7 @@ Prerequisites: Node, Yarn, Go.
 1. `cd embrace-downloads`
 1. `git checkout docker`
 1. `docker-compose up`
-1. Navigate to: [`http://localhost:8080/#dataexplorer`](http://localhost:8080/#dataexplorer) and run this two commands:
-    - `r.dbCreate('edserver');`
-    - `r.db('edserver').tableCreate('marker');`
-1. Open [`http://localhost:3000`](http://localhost:3000)
+1. Open [`http://localhost:3000`](http://localhost:3000) and enjoy!
 
 ## Description
 

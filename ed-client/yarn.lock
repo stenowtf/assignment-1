@@ -1267,7 +1267,7 @@ clap@^1.0.9:
   dependencies:
     chalk "^1.1.3"
 
-classnames@^2.2.5:
+classnames@^2.2.3, classnames@^2.2.5:
   version "2.2.5"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.5.tgz#fb3801d453467649ef3603c7d61a02bd129bde6d"
 
@@ -3813,6 +3813,10 @@ lodash.templatesettings@^4.0.0:
   dependencies:
     lodash._reinterpolate "~3.0.0"
 
+lodash.throttle@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
+
 lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
@@ -5006,6 +5010,19 @@ react-prop-types@^0.4.0:
   dependencies:
     warning "^3.0.0"
 
+react-resize-detector@^0.3.0:
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/react-resize-detector/-/react-resize-detector-0.3.3.tgz#ca07443072324843586666d9443a6356da7c0501"
+
+react-responsive-tabs@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-responsive-tabs/-/react-responsive-tabs-1.0.1.tgz#ae4d58c0e027aed265fa6455198fec6e7c3decc3"
+  dependencies:
+    classnames "^2.2.3"
+    lodash.throttle "^4.1.1"
+    react "^15.4.2"
+    react-resize-detector "^0.3.0"
+
 react-scripts@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-scripts/-/react-scripts-1.0.0.tgz#273854bfed540d96505208c368933a3619ff5fb1"
@@ -5066,7 +5083,7 @@ react-test-renderer@^15.5.4:
     fbjs "^0.8.9"
     object-assign "^4.1.0"
 
-"react@^0.14.7 || ^15.0.0", react@^15.5.4:
+"react@^0.14.7 || ^15.0.0", react@^15.4.2, react@^15.5.4:
   version "15.5.4"
   resolved "https://registry.yarnpkg.com/react/-/react-15.5.4.tgz#fa83eb01506ab237cdc1c8c3b1cea8de012bf047"
   dependencies:
