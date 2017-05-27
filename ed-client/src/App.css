@@ -29,6 +29,11 @@ h1, h3,
   height: 500px;
 }
 
+.charts-container {
+  width: 100%;
+  display: flex;
+}
+
 .section.chart-countries {
   width: 50%;
   margin-top: 15px;
@@ -40,6 +45,10 @@ h1, h3,
 }
 
 @media screen and (max-width: 667px) {
+  .charts-container {
+    flex-direction: column;
+  }
+
   .section.chart-countries {
     width: 100%;
   }
