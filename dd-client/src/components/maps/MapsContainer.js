@@ -112,7 +112,7 @@ class MapsContainer extends Component {
           onMapClick={this.dropMarker.bind(this)}
         />
         <a className='generatorLink' onClick={this.generateRandomMarkers.bind(this)}>
-          Generate some random data! <span role='img' aria-label='dice'>🎲</span>
+          Generate more random data! <span role='img' aria-label='dice'>🎲</span>
         </a>
       </div>
     );

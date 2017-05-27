@@ -33,7 +33,7 @@ const (
 func subscribeMap(client *Client, data interface{}) {
 	stop := client.NewStopChannel(MapStop)
 	result := make(chan r.ChangeResponse)
-	cursor, err := r.Table("appdownloads").
+	cursor, err := r.Table("downloads").
 		Changes(r.ChangesOpts{IncludeInitial: true}).
 		Run(client.session)
 	if err != nil {
