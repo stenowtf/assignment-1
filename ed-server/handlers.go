@@ -15,7 +15,7 @@ func addDownload(client *Client, data interface{}) {
 		return
 	}
 	go func() {
-		err = r.Table("appdownloads").
+		err = r.Table("downloads").
 			Insert(download).
 			Exec(client.session)
 		if err != nil {

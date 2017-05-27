@@ -45,7 +45,7 @@ class App extends Component {
     return (
       <div className="App">
         <Notifications />
-        <h1>Embrace downloads dashboard</h1>
+        <h1>downloads dashboard</h1>
         <MapsContainer
           {...this.state}
           addDownload={this.addDownload.bind(this)}

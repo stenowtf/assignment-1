@@ -20,7 +20,7 @@ type Download struct {
 func main() {
 	session, err := r.Connect(r.ConnectOpts{
 		Address:  "localhost:28015",
-		Database: "edserver",
+		Database: "dd",
 	})
 
 	if err != nil {
