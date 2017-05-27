@@ -4,8 +4,10 @@ import Tabs from 'react-responsive-tabs';
 
 import 'react-responsive-tabs/styles.css'
 
-import ChartDownloads from './ChartDownloads';
-import ChartTimesOfDay from './ChartTimesOfDay';
+import ChartByCountry from './ChartByCountry';
+import ChartByTime from './ChartByTime';
+import ChartByOS from './ChartByOS';
+import ChartByAppVersion from './ChartByAppVersion';
 
 class ChartsContainer extends Component {
   render() {
@@ -13,42 +15,32 @@ class ChartsContainer extends Component {
         <Tabs containerClass={'tabs-container'} items={[
             {
               title: 'By country and time of the day',
-              tabClassName: 'tab',
               transformWidth: 667,
               getContent: () => (
                 <div className='chartGroup'>
-                  <ChartDownloads {...this.props} />
-                  <ChartTimesOfDay {...this.props} />
+                  <ChartByCountry {...this.props} />
+                  <ChartByTime {...this.props} />
                 </div>
               ),
             },
             {
               title: 'By OS and app version',
+              transformWidth: 667,
               getContent: () => (
-                <div className='panel'>
-
+                <div className='chartGroup'>
+                  <ChartByOS {...this.props} />
+                  <ChartByAppVersion {...this.props} />
                 </div>
               ),
-              tabClassName: 'tab',
-              panelClassName: 'panel',
-              transformWidth: 667,
             }
           ]}
         />
-            /*<div className='charts-container'>
-              <div className="section chart-countries">
-                <ChartDownloads {...this.props} />
-              </div>
-              <div className="section chart-times-of-day">
-                <ChartTimesOfDay {...this.props} />
-              </div>
-            </div>*/
     );
   }
 }
 
 ChartsContainer.propTypes = {
-  markers: PropTypes.array.isRequired,
+  downloads: PropTypes.array.isRequired,
 }
 
 export default ChartsContainer;

@@ -19,7 +19,7 @@ Prerequisites: Node, Yarn, Go.
 1. `rethinkdb`
 1. Navigate to: [`http://localhost:8080/#dataexplorer`](http://localhost:8080/#dataexplorer) and run this two commands:
     - `r.dbCreate('edserver');`
-    - `r.db('edserver').tableCreate('marker');`
+    - `r.db('edserver').tableCreate('appdownloads');`
 1. Finally open [`http://localhost:3000`](http://localhost:3000) and enjoy!
 
 ## How to install using Docker

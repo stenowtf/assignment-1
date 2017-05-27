@@ -46,26 +46,18 @@ h1, h3,
   display: flex;
 }
 
-.section.chart-countries {
+.chart {
   width: 50%;
   margin-top: 15px;
 }
 
-.section.chart-times-of-day {
-  width: 50%;
-  margin-top: 15px;
-}
 
 @media screen and (max-width: 667px) {
   .chartGroup {
     flex-direction: column;
   }
 
-  .section.chart-countries {
-    width: 100%;
-  }
-
-  .section.chart-times-of-day {
+  .chart {
     width: 100%;
   }
 }

@@ -4,6 +4,8 @@ import moment from 'moment';
 import { notify } from 'react-notify-toast';
 
 import MapDownloads from './MapDownloads';
+import { AppOS } from '../../app-data'
+import { AppVersions } from '../../app-data'
 
 class MapsContainer extends Component {
   constructor() {
@@ -59,25 +61,24 @@ class MapsContainer extends Component {
           key: randomKey,
           country: country,
           time: time.format('HH:mm:ss MM/DD/YYYY'),
+          os: AppOS[0],
+          version: AppVersions[0][0],
         };
 
-        this.props.addMarker(marker);
+        this.props.addDownload(marker);
 
         if (!isRandom) {
-          this.show('Marker dropped! 📍', 'success', 1500)
+          this.show('Someone downloaded the app! ⭐️', 'success', 1500)
         }
       } else {
         if (!isRandom) {
-          this.show('Invalid location for a marker! 🌊', 'warning', 1500)
+          this.show('Invalid location for a download! 🌊', 'warning', 1500)
         }
       }
     })
     .catch(err => {
-      this.show('Reverse geocoding failed. 🚫', 'error', 1500)
+      this.show('Reverse geocoding failed. 🚫', 'warning', 1500)
     });
-  }
-  handleMarkerRightClick(marker) {
-    // TODO: remove a marker
   }
   generateRandomMarkers(event) {
     event.preventDefault();
@@ -93,13 +94,13 @@ class MapsContainer extends Component {
       setTimeout(this.generateMarker(latitude, longitude, true), 200);
     }
 
-    this.show('Randomizing... 📍', 'success', 2500)
+    this.show('People are downloading the app! 🌟✨💫', 'success', 2500)
   }
   render() {
     return (
       <div className="section map">
         <MapDownloads
-          markers={this.props.markers}
+          downloads={this.props.downloads}
           containerElement={
             <div style={{ height: `100%` }} />
           }
@@ -108,7 +109,6 @@ class MapsContainer extends Component {
           }
           onMapLoad={this.mapLoad.bind(this)}
           onMapClick={this.dropMarker.bind(this)}
-          onMarkerRightClick={this.handleMarkerRightClick.bind(this)}
         />
         <a className='generatorLink' onClick={this.generateRandomMarkers.bind(this)}>
           Generate some random data! <span role='img' aria-label='dice'>🎲</span>
@@ -119,8 +119,8 @@ class MapsContainer extends Component {
 }
 
 MapsContainer.propTypes = {
-  markers: PropTypes.array.isRequired,
-  addMarker: PropTypes.func.isRequired,
+  downloads: PropTypes.array.isRequired,
+  addDownload: PropTypes.func.isRequired,
 }
 
 export default MapsContainer;

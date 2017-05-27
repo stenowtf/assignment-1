@@ -15,10 +15,9 @@ const MapDownloads = withGoogleMap(props => (
       enableRetinaIcons
       gridSize={10}
     >
-      {props.markers.map(marker => (
+      {props.downloads.map(marker => (
         <Marker
           {...marker}
-          onRightClick={() => props.onMarkerRightClick(marker)}
         />
       ))}
     </MarkerClusterer>
@@ -26,10 +25,9 @@ const MapDownloads = withGoogleMap(props => (
 ));
 
 MapDownloads.propTypes = {
-  markers: PropTypes.array.isRequired,
+  downloads: PropTypes.array.isRequired,
   onMapLoad: PropTypes.func.isRequired,
   onMapClick: PropTypes.func.isRequired,
-  onMarkerRightClick: PropTypes.func.isRequired,
 }
 
 export default MapDownloads;

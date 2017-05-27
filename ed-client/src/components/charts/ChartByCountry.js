@@ -4,24 +4,24 @@ import ReactTable from 'react-table'
 
 import 'react-table/react-table.css'
 
-class ChartDownloads extends Component {
+class ChartByCountry extends Component {
   render() {
-    const {markers} = this.props;
+    const {downloads} = this.props;
     let countries = [];
 
-    markers.forEach(marker => {
+    downloads.forEach(download => {
       let found = countries.find((element) => {
-        return element.country === marker.country;
+        return element.country === download.country;
       });
 
       if (found === undefined) {
         countries.push({
-          country: marker.country,
+          country: download.country,
           total: 1,
         });
       } else {
         let foundIndex = countries.findIndex((element) => {
-          return element.country === marker.country;
+          return element.country === download.country;
         });
         countries[foundIndex] = {
           country: found.country,
@@ -39,7 +39,7 @@ class ChartDownloads extends Component {
     }]
 
     return (
-      <div className='section chart-countries'>
+      <div className='chart'>
         <ReactTable
           data={countries}
           columns={columns}
@@ -56,8 +56,8 @@ class ChartDownloads extends Component {
   }
 }
 
-ChartDownloads.propTypes = {
-  markers: PropTypes.array.isRequired,
+ChartByCountry.propTypes = {
+  downloads: PropTypes.array.isRequired,
 }
 
-export default ChartDownloads;
+export default ChartByCountry;

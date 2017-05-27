@@ -7,27 +7,23 @@ import (
 	r "gopkg.in/gorethink/gorethink.v3"
 )
 
-func addMarker(client *Client, data interface{}) {
-	var marker Marker
-	err := mapstructure.Decode(data, &marker)
+func addDownload(client *Client, data interface{}) {
+	var download Download
+	err := mapstructure.Decode(data, &download)
 	if err != nil {
 		client.send <- Message{"error", err.Error()}
 		return
 	}
 	go func() {
-		err = r.Table("marker").
-			Insert(marker).
+		err = r.Table("appdownloads").
+			Insert(download).
 			Exec(client.session)
 		if err != nil {
 			client.send <- Message{"error", err.Error()}
 		}
 
-		fmt.Printf("%+v\n", marker)
+		fmt.Printf("%+v\n", download)
 	}()
-}
-
-func removeMarker(client *Client, data interface{}) {
-
 }
 
 const (
@@ -37,7 +33,7 @@ const (
 func subscribeMap(client *Client, data interface{}) {
 	stop := client.NewStopChannel(MapStop)
 	result := make(chan r.ChangeResponse)
-	cursor, err := r.Table("marker").
+	cursor, err := r.Table("appdownloads").
 		Changes(r.ChangesOpts{IncludeInitial: true}).
 		Run(client.session)
 	if err != nil {
@@ -58,7 +54,7 @@ func subscribeMap(client *Client, data interface{}) {
 				return
 			case change := <-result:
 				if change.NewValue != nil && change.OldValue == nil {
-					client.send <- Message{"marker add", change.NewValue}
+					client.send <- Message{"download add", change.NewValue}
 				}
 			}
 		}

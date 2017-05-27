@@ -4,9 +4,9 @@ import moment from 'moment';
 import { VictoryChart, VictoryBar } from 'victory-chart';
 import { VictoryTheme } from 'victory-core';
 
-class ChartTimesOfDay extends Component {
+class ChartByTime extends Component {
   render() {
-    const {markers} = this.props;
+    const {downloads} = this.props;
 
     let timesOfDay = [
       { time: 'Morning', total: 0 },
@@ -14,9 +14,9 @@ class ChartTimesOfDay extends Component {
       { time: 'Evening', total: 0 },
     ];
 
-    markers.forEach(marker => {
+    downloads.forEach(download => {
       let timeOfDay;
-      let hour = moment(marker.time, 'HH:mm:ss MM/DD/YYYY').hour();
+      let hour = moment(download.time, 'HH:mm:ss MM/DD/YYYY').hour();
 
       if (hour <= 12) {
         timeOfDay = 'Morning';
@@ -34,7 +34,7 @@ class ChartTimesOfDay extends Component {
     });
 
     return (
-      <div className='section chart-times-of-day'>
+      <div className='chart'>
         <VictoryChart
           theme={VictoryTheme.material}
         >
@@ -63,8 +63,8 @@ class ChartTimesOfDay extends Component {
   }
 }
 
-ChartTimesOfDay.propTypes = {
-  markers: PropTypes.array.isRequired,
+ChartByTime.propTypes = {
+  downloads: PropTypes.array.isRequired,
 }
 
-export default ChartTimesOfDay;
+export default ChartByTime;

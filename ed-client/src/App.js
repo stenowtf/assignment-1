@@ -11,7 +11,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      markers: [],
+      downloads: [],
       connected: false,
     }
     this.show = notify.createShowQueue();
@@ -21,8 +21,7 @@ class App extends Component {
     let socket = this.socket = new Socket(ws);
     socket.on('connect', this.onConnect.bind(this));
     socket.on('disconnect', this.onDisconnect.bind(this));
-    socket.on('marker add', this.onAddMarker.bind(this));
-    socket.on('marker remove', this.onRemoveMarker.bind(this));
+    socket.on('download add', this.onAddDownload.bind(this));
   }
   onConnect() {
     this.setState({connected: true});
@@ -31,17 +30,16 @@ class App extends Component {
   onDisconnect() {
     this.setState({connected: false});
   }
-  onAddMarker(marker) {
-    marker.position = { lat: marker.latitude, lng: marker.longitude }
-    marker.defaultAnimation = 2;
+  onAddDownload(download) {
+    download.position = { lat: download.latitude, lng: download.longitude }
+    download.defaultAnimation = 2;
 
-    let {markers} = this.state;
-    markers.push(marker);
-    this.setState({markers});
+    let {downloads} = this.state;
+    downloads.push(download);
+    this.setState({downloads});
   }
-  onRemoveMarker() {}
-  addMarker(marker) {
-    this.socket.emit('marker add', marker);
+  addDownload(download) {
+    this.socket.emit('download add', download);
   }
   render() {
     return (
@@ -49,12 +47,10 @@ class App extends Component {
         <Notifications />
         <h1>Embrace downloads dashboard</h1>
         <MapsContainer
-          {...this.state }
-          addMarker={this.addMarker.bind(this)}
+          {...this.state}
+          addDownload={this.addDownload.bind(this)}
         />
-        <ChartsContainer
-          {...this.state }
-        />
+        <ChartsContainer {...this.state} />
       </div>
     );
   }
