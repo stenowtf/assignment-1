@@ -1,24 +1,25 @@
 import React, { Component } from 'react';
 import Socket from './socket';
-import Notifications, { notify } from 'react-notify-toast';
+import Notifications from 'react-notify-toast';
 
-import MapsContainer from './maps/MapsContainer';
-import ChartsContainer from './charts/ChartsContainer';
+import MapSection from './maps/MapSection';
+import ChartsSection from './charts/ChartsSection';
 
 import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       downloads: [],
       connected: false,
     };
-    this.show = notify.createShowQueue();
   }
   componentDidMount() {
     let ws = new WebSocket('ws://localhost:4000');
     let socket = this.socket = new Socket(ws);
+
     socket.on('connect', this.onConnect.bind(this));
     socket.on('disconnect', this.onDisconnect.bind(this));
     socket.on('download add', this.onAddDownload.bind(this));
@@ -35,6 +36,7 @@ class App extends Component {
     download.defaultAnimation = 2;
 
     let {downloads} = this.state;
+
     downloads.push(download);
     this.setState({downloads});
   }
@@ -46,11 +48,11 @@ class App extends Component {
       <div className="App">
         <Notifications />
         <h1>downloads dashboard</h1>
-        <MapsContainer
+        <MapSection
           {...this.state}
           addDownload={this.addDownload.bind(this)}
         />
-        <ChartsContainer {...this.state} />
+        <ChartsSection {...this.state} />
       </div>
     );
   }

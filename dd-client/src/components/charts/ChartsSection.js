@@ -9,7 +9,7 @@ import ChartByAppVersion from './ChartByAppVersion';
 
 import 'react-responsive-tabs/styles.css';
 
-class ChartsContainer extends Component {
+class ChartsSection extends Component {
   render() {
     return (
         <Tabs containerClass={'tabs-container'} items={[
@@ -39,8 +39,8 @@ class ChartsContainer extends Component {
   }
 }
 
-ChartsContainer.propTypes = {
+ChartsSection.propTypes = {
   downloads: PropTypes.array.isRequired,
 };
 
-export default ChartsContainer;
+export default ChartsSection;

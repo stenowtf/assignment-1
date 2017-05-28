@@ -11,17 +11,17 @@ class ChartByAppVersion extends Component {
 
     downloads.forEach(download => {
       let found = versions.find((element) => {
-        return element.version === download.os + ': ' + download.version;
+        return element.version === download.version + ' (' + download.os + ')';
       });
 
       if (found === undefined) {
         versions.push({
-          version: download.os + ': ' + download.version,
+          version: download.version + ' (' + download.os + ')',
           total: 1,
         });
       } else {
         let foundIndex = versions.findIndex((element) => {
-          return element.version === download.os + ': ' + download.version;
+          return element.version === download.version + ' (' + download.os + ')';
         });
         versions[foundIndex] = {
           version: found.version,

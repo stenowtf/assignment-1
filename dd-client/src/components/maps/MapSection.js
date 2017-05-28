@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import { notify } from 'react-notify-toast';
 
-import MapDownloads from './MapDownloads';
-import { AppOS, AppVersions } from '../utils';
+import Map from './Map';
+import utils from '../utils';
 
-class MapsContainer extends Component {
+class MapSection extends Component {
   constructor() {
     super();
+
     this.show = notify.createShowQueue();
   }
-  mapLoad(map) {}
-  dropMarker(event) {
+  onMapLoad(map) {}
+  onMapClick(event) {
     const latitude = event.latLng.lat();
     const longitude = event.latLng.lng();
 
@@ -40,40 +40,29 @@ class MapsContainer extends Component {
     })
     .then(geoInfo => {
       if (geoInfo[0] === 'OK') {
-        let time;
-
-        if (isRandom) {
-          const randomNumber = (to, from) => {
-            return Math.floor(Math.random() * (to - from) + from);
-          };
-          time = moment.unix(randomNumber(moment().unix(), moment(new Date(2017, 4, 22)).unix()));
-        } else {
-          time = moment();
-        }
-
-        const os = Math.floor(Math.random() * 2);
-        const version = Math.floor(Math.random() * (AppVersions[os].length + 1));
+        const os = utils.getRandomOS();
+        const version = utils.getRandomAppVersion(os[0]);
 
         const marker = {
           position: { lat: latitude, lng: longitude },
           latitude: latitude,
           longitude: longitude,
           defaultAnimation: 2,
-          key: Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36),
+          key: utils.getRandomKey(),
           country: geoInfo[1],
-          time: time.format('HH:mm:ss MM/DD/YYYY'),
-          os: AppOS[os],
-          version: AppVersions[os][version],
+          time: utils.getRandomTime(),
+          os: os[1],
+          version: version[1],
         };
 
         this.props.addDownload(marker);
 
         if (!isRandom) {
-          this.show('Someone downloaded the app! ⭐️', 'success', 1500)
+          this.show('Someone downloaded the app! ⭐️', 'success', 1500);
         }
       } else {
         if (!isRandom) {
-          this.show('Invalid location for a download! 🌊', 'warning', 1500)
+          this.show('Invalid location for a download! 🌊', 'warning', 1500);
         }
       }
     })
@@ -84,13 +73,9 @@ class MapsContainer extends Component {
   generateRandomMarkers(event) {
     event.preventDefault();
 
-    const getRandomInRange = (from, to, fixed) => {
-      return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
-    };
-
     for (let i = 0; i < 100; i++) {
-      const latitude = getRandomInRange(-180, 180, 7);
-      const longitude = getRandomInRange(-90, 90, 7);
+      const latitude = utils.getRandomLatitude();
+      const longitude = utils.getRandomLongitude();
 
       setTimeout(this.generateMarker(latitude, longitude, true), 200);
     }
@@ -100,7 +85,7 @@ class MapsContainer extends Component {
   render() {
     return (
       <div className="section map">
-        <MapDownloads
+        <Map
           downloads={this.props.downloads}
           containerElement={
             <div style={{ height: '100%' }} />
@@ -108,8 +93,8 @@ class MapsContainer extends Component {
           mapElement={
             <div style={{ height: '100%' }} />
           }
-          onMapLoad={this.mapLoad.bind(this)}
-          onMapClick={this.dropMarker.bind(this)}
+          onMapLoad={this.onMapLoad.bind(this)}
+          onMapClick={this.onMapClick.bind(this)}
         />
         <a className='generatorLink' onClick={this.generateRandomMarkers.bind(this)}>
           Generate more random data! <span role='img' aria-label='dice'>🎲</span>
@@ -119,9 +104,9 @@ class MapsContainer extends Component {
   }
 }
 
-MapsContainer.propTypes = {
+MapSection.propTypes = {
   downloads: PropTypes.array.isRequired,
   addDownload: PropTypes.func.isRequired,
 };
 
-export default MapsContainer;
+export default MapSection;
