@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import { VictoryChart, VictoryBar } from 'victory-chart';
 import { VictoryTheme } from 'victory-core';
+
+import utils from '../../utils';
 
 class ChartByTime extends Component {
   render() {
@@ -16,7 +17,7 @@ class ChartByTime extends Component {
 
     downloads.forEach(download => {
       let timeOfDay;
-      let hour = moment(download.time, 'HH:mm:ss MM/DD/YYYY').hour();
+      let hour = utils.getHour(download.time);
 
       if (hour <= 12) {
         timeOfDay = 'Morning';

@@ -1,48 +1,41 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { VictoryPie } from 'victory-pie';
-import { VictoryTooltip, VictoryTheme } from 'victory-core';
+import PieChart from 'react-svg-piechart';
 
 class ChartByOS extends Component {
   render() {
     const {downloads} = this.props;
 
     let oss = [
-      { name: 'iOS', total: 0 },
-      { name: 'Android', total: 0 },
+      { label: 'iOS', value: 0, color: '#007bb6' },
+      { label: 'Android', value: 0, color: '#dd4b39' },
     ];
 
     downloads.forEach(download => {
       oss.forEach(o => {
-        if (o.name === download.os) {
-          o.total += 1;
+        if (o.label === download.os) {
+          o.value += 1;
         }
       });
     });
 
     return (
       <div className='chart'>
-        <VictoryPie
-          labelComponent={
-            <VictoryTooltip
-              style={{
-                fontSize: 10,
-              }}
-              flyoutStyle={{
-                stroke: 'black',
-                fill: 'white',
-              }}
-            />
-          }
-          labels={(o) => o.name + ': ' + o.total}
-          theme={VictoryTheme.material}
+        <PieChart
           data={oss}
-          x="name"
-          y="total"
-          colorScale="qualitative"
-          sortKey={['total', 'name']}
-        >
-        </VictoryPie>
+          sectorStrokeWidth={1}
+        />
+        <div>
+          {
+            oss.map((element, i) => (
+                <div key={i}>
+                    <span>
+                        { element.label }: { element.value }
+                    </span>
+                </div>
+            ))
+          }
+        </div>
       </div>
     );
   }
