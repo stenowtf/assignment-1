@@ -10,18 +10,20 @@ class ChartByAppVersion extends Component {
     let versions = [];
 
     downloads.forEach(download => {
+      const extendedVersion = download.version + ' (' + download.os + ')';
+
       let found = versions.find((element) => {
-        return element.version === download.version + ' (' + download.os + ')';
+        return element.version === extendedVersion;
       });
 
       if (found === undefined) {
         versions.push({
-          version: download.version + ' (' + download.os + ')',
+          version: extendedVersion,
           total: 1,
         });
       } else {
         let foundIndex = versions.findIndex((element) => {
-          return element.version === download.version + ' (' + download.os + ')';
+          return element.version === extendedVersion;
         });
         versions[foundIndex] = {
           version: found.version,

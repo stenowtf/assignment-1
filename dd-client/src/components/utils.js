@@ -29,6 +29,9 @@ export default {
   getRandomTime: () => {
     return moment.unix(randomNumber(moment().unix(), moment(new Date(2017, 4, 22)).unix())).format('HH:mm:ss MM/DD/YYYY');
   },
+  getHour: (time) => {
+    return moment(time, 'HH:mm:ss MM/DD/YYYY').hour();
+  },
   getRandomOS: () => {
     const rand = Math.floor(Math.random() * AppOS.length);
     return [rand, AppOS[rand]];
