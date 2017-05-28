@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Socket from './socket';
 import Notifications from 'react-notify-toast';
 
-import MapSection from './maps/MapSection';
-import ChartsSection from './charts/ChartsSection';
+import MapSection from './components/maps/MapSection';
+import ChartsSection from './components/charts/ChartsSection';
 
 import './App.css';
 

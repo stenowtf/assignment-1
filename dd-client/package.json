@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "geonames.js": "^1.0.3",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
@@ -14,8 +13,7 @@
     "react-responsive-tabs": "^1.0.1",
     "react-svg-piechart": "^1.2.3",
     "react-table": "^6.0.5",
-    "victory-chart": "^19.1.1",
-    "victory-pie": "^11.1.0"
+    "victory-chart": "^19.1.1"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

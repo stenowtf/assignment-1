@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { notify } from 'react-notify-toast';
 
 import Map from './Map';
-import utils from '../utils';
+import utils from '../../utils';
 
 class MapSection extends Component {
   constructor() {

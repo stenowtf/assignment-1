@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { VictoryChart, VictoryBar } from 'victory-chart';
 import { VictoryTheme } from 'victory-core';
 
-import utils from '../utils';
+import utils from '../../utils';
 
 class ChartByTime extends Component {
   render() {
